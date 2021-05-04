@@ -50,7 +50,7 @@ public class FormUserActivity extends AppCompatActivity {
 
         return (name.getError() == null &&
                 email.getError() == null &&
-                password.getError() == null);
+                password.getError() == null); // Em caso de falha, checar se está vazio também
     }
 
     private void initializeAttributes() {
