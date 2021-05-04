@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Modulo 1</string>
+    <string name="fab_main">fab_main</string>
+    <string name="senha">Senha</string>
+    <string name="email">Email</string>
+    <string name="nome">Nome</string>
+    <string name="salvar">Salvar</string>
 </resources>
