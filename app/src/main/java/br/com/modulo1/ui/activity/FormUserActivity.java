@@ -1,4 +1,4 @@
-package br.com.modulo1;
+package br.com.modulo1.ui.activity;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -6,8 +6,10 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import br.com.modulo1.R;
 import br.com.modulo1.dao.UserDao;
 import br.com.modulo1.model.User;
+import br.com.modulo1.ui.activity.validator.FormUserValidator;
 
 public class FormUserActivity extends AppCompatActivity {
 
@@ -33,10 +35,22 @@ public class FormUserActivity extends AppCompatActivity {
     }
 
     private void saveUserAndClose(UserDao userDao) {
-        userDao.save(new User(name.getText().toString(),
-                                email.getText().toString(),
-                                password.getText().toString()));
-        finish();
+        if (validateInputData()) {
+            userDao.save(new User(name.getText().toString(),
+                    email.getText().toString(),
+                    password.getText().toString()));
+            finish();
+        }
+    }
+
+    private boolean validateInputData() {
+        FormUserValidator.NAME.validate(name);
+        FormUserValidator.EMAIL.validate(email);
+        FormUserValidator.PASSWORD.validate(password);
+
+        return (name.getError() == null &&
+                email.getError() == null &&
+                password.getError() == null);
     }
 
     private void initializeAttributes() {

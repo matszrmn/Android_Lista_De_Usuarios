@@ -1,4 +1,4 @@
-package br.com.modulo1;
+package br.com.modulo1.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import br.com.modulo1.R;
 import br.com.modulo1.dao.UserDao;
 
 public class MainActivity extends AppCompatActivity {
