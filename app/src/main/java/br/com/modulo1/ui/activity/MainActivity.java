@@ -25,13 +25,21 @@ public class MainActivity extends AppCompatActivity {
 
         initializeDao();
         initializeViews();
-        configAddButtonActivity();
+        configAddButton();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         fillUserList();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        System.gc();
+        System.exit(0);
     }
 
     private void initializeViews() {
@@ -43,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         userDao = new UserDao();
     }
 
-    private void configAddButtonActivity() {
+    private void configAddButton() {
         addButton.setOnClickListener(v -> {
             navigateToFormUser();
         });

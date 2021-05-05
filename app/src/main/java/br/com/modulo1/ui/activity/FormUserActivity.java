@@ -1,6 +1,7 @@
 package br.com.modulo1.ui.activity;
 
 import android.os.Bundle;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -25,16 +26,33 @@ public class FormUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_form_user);
 
         initializeAttributes();
-        configSaveButton(userDao);
+        configSaveButton();
+        configDoneButton();
     }
 
-    private void configSaveButton(UserDao userDao) {
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    private void configSaveButton() {
         saveButton.setOnClickListener(v -> {
-            saveUserAndClose(userDao);
+            saveUserAndClose();
         });
     }
 
-    private void saveUserAndClose(UserDao userDao) {
+    private void configDoneButton() {
+        password.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                saveUserAndClose();
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void saveUserAndClose() {
         if (validateInputData()) {
             userDao.save(new User(name.getText().toString(),
                     email.getText().toString(),
