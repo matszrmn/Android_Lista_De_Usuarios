@@ -5,4 +5,6 @@
     <string name="email">Email</string>
     <string name="nome">Nome</string>
     <string name="salvar">Salvar</string>
+    <string name="remove_menu">Remover</string>
+    <string name="save_form_user_menu_name">Salvar</string>
 </resources>
