@@ -52,6 +52,12 @@ public class FormUserActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
     private void initializeTitleAndTextFields() {
         Intent intent = getIntent();
 
@@ -81,12 +87,6 @@ public class FormUserActivity extends AppCompatActivity {
         user.setName(name.getText().toString());
         user.setEmail(email.getText().toString());
         user.setPassword(password.getText().toString());
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
     private void configDoneButton() {

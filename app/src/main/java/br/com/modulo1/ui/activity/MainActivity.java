@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TITLE_ADD_USER = "Novo Usuário";
     public static final String TITLE_UPDATE_USER = "Editar Usuário";
+    public static final String MESSAGE_CONFIRM_REMOVE = "Deseja mesmo excluir este usuário?";
+    public static final String NEGATIVE_CONFIRM = "Não";
+    public static final String POSITIVE_CONFIRM = "Sim";
     private UserDao userDao;
     private ListView listUsers;
     private FloatingActionButton addButton;
@@ -67,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         if (item.getItemId() == R.id.remove_form_user_menu) {
-            User user = (User) adapter.getItem(menuInfo.position);
-            removeUser(user);
+            openRemoveDialog(menuInfo.position);
         }
         return super.onContextItemSelected(item);
     }
@@ -79,6 +82,18 @@ public class MainActivity extends AppCompatActivity {
         finish();
         System.gc();
         System.exit(0);
+    }
+
+    @SuppressWarnings("CodeBlock2Expr")
+    private void openRemoveDialog(int position) {
+        User user = (User) adapter.getItem(position);
+        new AlertDialog.Builder(this)
+                .setMessage(MESSAGE_CONFIRM_REMOVE)
+                .setNegativeButton(NEGATIVE_CONFIRM, null)
+                .setPositiveButton(POSITIVE_CONFIRM, (dialog, which) -> {
+                    removeUser(user);
+                })
+                .show();
     }
 
     private void initDao() {
@@ -128,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void removeUser(User user) {
-        adapter.remove(user);
         userDao.remove(user);
+        adapter.remove(user);
     }
 }

@@ -47,12 +47,12 @@ public class User implements Serializable {
 
     public User() {}
 
-    /*public User(String name, String email, String password) {
-        this.id = null;
+    public User(String name, String email, String password) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
         this.password = password;
-    }*/
+    }
 
     @NonNull
     @Override

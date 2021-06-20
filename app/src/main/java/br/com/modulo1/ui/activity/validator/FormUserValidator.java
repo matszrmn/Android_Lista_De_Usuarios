@@ -33,5 +33,6 @@ public enum FormUserValidator {
         }
     };
 
+    @SuppressWarnings("unused")
     public abstract void validate(EditText editText);
 }
