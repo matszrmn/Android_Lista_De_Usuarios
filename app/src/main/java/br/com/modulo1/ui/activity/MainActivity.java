@@ -12,15 +12,13 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import br.com.modulo1.R;
-import br.com.modulo1.dao.UserDao;
 import br.com.modulo1.model.User;
-import br.com.modulo1.ui.activity.adapters.UserListAdapter;
+import br.com.modulo1.service.MainService;
 
 import static br.com.modulo1.ui.activity.util.Constants.TITLE_MAP;
 import static br.com.modulo1.ui.activity.util.Constants.USER_MAP;
@@ -29,24 +27,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TITLE_ADD_USER = "Novo Usuário";
     public static final String TITLE_UPDATE_USER = "Editar Usuário";
-    public static final String MESSAGE_CONFIRM_REMOVE = "Deseja mesmo excluir este usuário?";
-    public static final String NEGATIVE_CONFIRM = "Não";
-    public static final String POSITIVE_CONFIRM = "Sim";
-    private UserDao userDao;
-    private ListView listUsers;
+    private MainService mainService;
     private FloatingActionButton addButton;
-    private UserListAdapter adapter;
+    private ListView listUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
-
-        initDao();
-        initViews();
-        initAddButtonListener();
-        initUserListAdapter();
-        initUserClickListener();
+        initAttributes();
     }
 
     @Nullable
@@ -58,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.refreshAdapter(userDao.getAll());
+        mainService.refreshAdapter();
     }
 
     @Override
@@ -71,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         if (item.getItemId() == R.id.remove_form_user_menu) {
-            openRemoveDialog(menuInfo.position);
+            mainService.openRemoveDialog(menuInfo.position);
         }
         return super.onContextItemSelected(item);
     }
@@ -84,25 +73,13 @@ public class MainActivity extends AppCompatActivity {
         System.exit(0);
     }
 
-    @SuppressWarnings("CodeBlock2Expr")
-    private void openRemoveDialog(int position) {
-        User user = (User) adapter.getItem(position);
-        new AlertDialog.Builder(this)
-                .setMessage(MESSAGE_CONFIRM_REMOVE)
-                .setNegativeButton(NEGATIVE_CONFIRM, null)
-                .setPositiveButton(POSITIVE_CONFIRM, (dialog, which) -> {
-                    removeUser(user);
-                })
-                .show();
-    }
-
-    private void initDao() {
-        userDao = new UserDao();
-    }
-
-    private void initViews() {
+    private void initAttributes() {
         addButton = findViewById(R.id.fab_add_main);
         listUsers = findViewById(R.id.list_users_main);
+        mainService = new MainService(this, listUsers);
+        initAddButtonListener();
+        initUserClickListener();
+        initUserListAdapter();
     }
 
     @SuppressWarnings("CodeBlock2Expr")
@@ -112,14 +89,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initUserListAdapter() {
-        adapter = new UserListAdapter(this);
-        listUsers.setAdapter(adapter);
-        registerForContextMenu(listUsers);
+    private void initUserClickListener() {
+        initOnUpdateUser();
     }
 
-    private void initUserClickListener() {
-        setOnUpdateUser();
+    @SuppressWarnings("CodeBlock2Expr")
+    private void initOnUpdateUser() {
+        listUsers.setOnItemClickListener((parent, view, position, id) -> {
+            navigateToFormUserUpdate((User) listUsers.getItemAtPosition(position));
+        });
+    }
+
+    private void initUserListAdapter() {
+        registerForContextMenu(listUsers);
     }
 
     private void navigateToFormUserAdd() {
@@ -133,17 +115,5 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(TITLE_MAP, TITLE_UPDATE_USER);
         intent.putExtra(USER_MAP, user);
         startActivity(intent);
-    }
-
-    @SuppressWarnings("CodeBlock2Expr")
-    private void setOnUpdateUser() {
-        listUsers.setOnItemClickListener((parent, view, position, id) -> {
-            navigateToFormUserUpdate((User) listUsers.getItemAtPosition(position));
-        });
-    }
-
-    private void removeUser(User user) {
-        userDao.remove(user);
-        adapter.remove(user);
     }
 }

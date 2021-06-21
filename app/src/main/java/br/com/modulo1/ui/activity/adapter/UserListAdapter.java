@@ -1,4 +1,4 @@
-package br.com.modulo1.ui.activity.adapters;
+package br.com.modulo1.ui.activity.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
