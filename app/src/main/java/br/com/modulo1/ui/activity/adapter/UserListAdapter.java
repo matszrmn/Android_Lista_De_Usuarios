@@ -1,6 +1,5 @@
 package br.com.modulo1.ui.activity.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,13 +37,14 @@ public class UserListAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint("ViewHolder")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.user_item, parent, false);
-        ((TextView) view.findViewById(R.id.name_user_item)).setText(users.get(position).getName());
-        ((TextView) view.findViewById(R.id.email_user_item)).setText(users.get(position).getEmail());
-        return view;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.user_item, parent, false);
+        }
+        ((TextView) convertView.findViewById(R.id.name_user_item)).setText(users.get(position).getName());
+        ((TextView) convertView.findViewById(R.id.email_user_item)).setText(users.get(position).getEmail());
+        return convertView;
     }
 
     public void remove(User user) {
